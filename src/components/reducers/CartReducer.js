@@ -43,7 +43,10 @@ const CartReducer = (state = initState, action) => {
     if(action.type === REMOVE_ITEM){
         let itemToRemove = state.addedItems.find(item => action.id === item.id);
         let newItems = state.addedItems.filter(item => action.id !== item.id);
-        let newTotal = state.total - (itemToRemove.price * itemToRemove.quantity)
+        let newTotal = state.total;
+
+        if (itemToRemove)
+            newTotal = state.total - (itemToRemove.price * itemToRemove.quantity)
         return {
             ...state,
             addedItems: newItems,
@@ -61,21 +64,23 @@ const CartReducer = (state = initState, action) => {
     }
     if(action.type === SUB_QUANTITY){
         let addedItem = state.items.find(item => item.id === action.id)
-        let newTotal = state.total - addedItem.price
-        if(addedItem.quantity === 1){
-            let new_items = state.addedItems.filter(item=>item.id !== action.id)
-            
-            return{
-                ...state,
-                addedItems: new_items,
-                total: newTotal
+        if (addedItem){
+            let newTotal = state.total - addedItem.price
+            if(addedItem.quantity === 1){
+                let newItems = state.addedItems.filter(item=>item.id !== action.id)
+
+                return{
+                    ...state,
+                    addedItems: newItems,
+                    total: newTotal
+                }
             }
-        }
-        else {
-            addedItem.quantity -= 1
-            return {
-                ...state,
-                total: newTotal
+            else {
+                addedItem.quantity -= 1
+                return {
+                    ...state,
+                    total: newTotal
+                }
             }
         }
     }

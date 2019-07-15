@@ -2,6 +2,14 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 
 class Recipe extends Component{
+    constructor(props){
+        super(props);
+        
+        this.state = {
+            total: this.props.total
+        }
+    }
+
     handleChecked = (e) =>{
         if(e.target.checked){
             this.props.addShipping();
@@ -26,7 +34,7 @@ class Recipe extends Component{
                             <span>Shipping(+6$)</span>
                         </label>
                     </li>
-                    <li className="collection-item"><b>Total: {this.props.total} $</b></li>
+                    <li className="collection-item"><b>Total: {this.state.total} $</b></li>
                 </div>
                 <div className="checkout">
                     <button className="waves-effect waves-light btn">Checkout</button>

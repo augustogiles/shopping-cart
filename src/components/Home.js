@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-//import { dispatch } from 'rxjs/internal/observable/pairs';
 import '../css/Home.css';
 import { addToCart } from './actions/cartActions'
 
