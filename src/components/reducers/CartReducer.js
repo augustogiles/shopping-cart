@@ -4,7 +4,7 @@ import Item3 from '../../images/item3.jpg'
 import Item4 from '../../images/item4.jpg'
 import Item5 from '../../images/item5.jpg'
 import Item6 from '../../images/item6.jpg'
-import { ADD_TO_CART} from '../actions/action-types/actionTypes'
+import {ADD_TO_CART, REMOVE_ITEM, SUB_QUANTITY, ADD_QUANTITY, ADD_SHIPPING, SUB_SHIPPING} from '../actions/action-types/actionTypes'
 
 const initState = {
     items : [
@@ -22,7 +22,7 @@ const initState = {
 const CartReducer = (state = initState, action) => { 
     if(action.type === ADD_TO_CART){
         let addedItem = state.items.find(item => item.id === action.id)
-        let existed_item = state.addedItems.find(item => action.id == item.id)
+        let existed_item = state.addedItems.find(item => action.id === item.id)
         if(existed_item){
             addedItem.quantity += 1
             return {
@@ -39,9 +39,62 @@ const CartReducer = (state = initState, action) => {
                 total: newTotal
             }
         }
-    }else{
-        return state;
     }
+    if(action.type === REMOVE_ITEM){
+        let itemToRemove = state.addedItems.find(item => action.id === item.id);
+        let newItems = state.addedItems.filter(item => action.id !== item.id);
+        let newTotal = state.total - (itemToRemove.price * itemToRemove.quantity)
+        return {
+            ...state,
+            addedItems: newItems,
+            total: newTotal
+        }
+    }
+    if(action.type === ADD_QUANTITY){
+        let addedItem = state.items.find(item => item.id === action.id)
+        addedItem.quantity += 1
+        return {
+            ...state,
+            total: state.total + addedItem.price
+        }
+        
+    }
+    if(action.type === SUB_QUANTITY){
+        let addedItem = state.items.find(item => item.id === action.id)
+        let newTotal = state.total - addedItem.price
+        if(addedItem.quantity === 1){
+            let new_items = state.addedItems.filter(item=>item.id !== action.id)
+            
+            return{
+                ...state,
+                addedItems: new_items,
+                total: newTotal
+            }
+        }
+        else {
+            addedItem.quantity -= 1
+            return {
+                ...state,
+                total: newTotal
+            }
+        }
+    }
+
+    if(action.type === ADD_SHIPPING){
+        return {
+            ...state,
+            total: state.total + 6
+        }
+    }
+    if(action.type === SUB_SHIPPING){
+        return{
+            ...state,
+            total: state.total - 6
+        }
+    }
+
+    return state;
+    
 
 }
 

@@ -1,7 +1,21 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
+import {removeItem, addQuantity, subtractQuantity} from './actions/cartActions'
+import Recipe from './Recipe'
 class Cart extends Component{
+
+    handleRemove = (id) => {
+        this.props.removeItem(id);
+    }
+
+    handleAddQuantity = (id) => {
+        this.props.addQuantity(id);
+    }
+
+    handleSubtractQuantity = (id) => {
+        this.props.subtractQuantity(id);
+    }
 
     render(){
         let addedItems = this.props.items.length ?
@@ -39,6 +53,7 @@ class Cart extends Component{
                         {addedItems}
                     </ul>
                 </div>
+                <Recipe/>
             </div>
         )
 
@@ -46,8 +61,16 @@ class Cart extends Component{
 }
 const mapStateToProps = (state)=>{
     return{
-        items: state.addedItems
+        items: state.addedItems     
     }
 }
 
-export default connect(mapStateToProps)(Cart)
+const mapDispatchToProps = (dispatch) => {
+    return {
+        removeItem: (id) => {dispatch(removeItem(id))},
+        addQuantity: (id) => {dispatch(addQuantity(id))},
+        subtractQuantity: (id) => {dispatch(subtractQuantity(id))}
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Cart)
